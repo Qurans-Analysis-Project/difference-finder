@@ -3,11 +3,24 @@ from typing import List
 from json import loads, dumps
 
 
+ARABIC_CONSONANTS = [
+    'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق',
+    'ك', 'ل', 'م', 'ن', 'ه', 'و', 'ي'
+]
+
+
 def write_out(out_dir: Path, obj: dict):
     name1 = str(obj['source1']).partition('.')[0]
     name2 = str(obj['source2']).partition('.')[0]
     out_path = out_dir.joinpath(f'{name1}_vs_{name2}.json')
     out_path.write_text(dumps(obj))
+
+def find_verse_num_of_narration(chapter: dict, word_index: str):
+    for verse_num in range( 1, len(chapter['verses'])+1 ):
+        low_index, high_index = chapter['verses'][str(verse_num)]['indices']
+        if low_index <= word_index <= high_index:
+            return verse_num
+    return 0 # Not found condition
 
 
 if __name__ == '__main__':
@@ -26,6 +39,9 @@ if __name__ == '__main__':
         total+=x
     print(f"There will be {total} contrasts made")
 
+    # keep track of overall differences
+    all_narrarations_difference_count = 0
+
     # Cycle through them
     contrast_count = 0
     for i in range(len(all_jsons)-1):   # -1 don't compare the last one with itself
@@ -33,6 +49,7 @@ if __name__ == '__main__':
             q1 = all_jsons[i] # quran narration 1
             q2 = all_jsons[j] # quran narration 2
             contrast_count += 1
+            this_pair_difference_count = 0
             print(f"Progress: {contrast_count} / {total}")
             print(f"Contrasting: {q1.name} vs. {q2.name}")
             
@@ -63,6 +80,7 @@ if __name__ == '__main__':
                 ch1 = chs1[f'{a}']
                 ch2 = chs2[f'{a}']
                 diffs['chapters'][a] = {}
+                diffs['chapters'][a]['diffs'] = []
 
                 # Do chapter names match?
                 if ch1['name'] != ch2['name']:
@@ -76,40 +94,37 @@ if __name__ == '__main__':
                         'names': [ch1['name']]
                         }
                 
-                vs1 = ch1['verses']
-                vs2 = ch2['verses']
-                # Does verse count match?
-                if len(vs1) != len(vs2):
-                    diffs['chapters'][a]['verse_count_match?'] = False
-                    diffs['chapters'][a]['verse_counts'] = [len(vs1), len(vs2)]
-                    print(f"WARNING: Number of verses don't match in chapter {a}. Skipping.")
-                    continue # Go to next chapter
-                diffs['chapters'][a]['verse_count_match?'] = True
-                diffs['chapters'][a]['verse_counts'] = [len(vs1)]
-                diffs['chapters'][a]['verses'] = {}
-                
-                for b in range(1, len(vs1)):
-                    v1 = vs1[f'{b}']['words']
-                    v2 = vs2[f'{b}']['words']
-                    diffs['chapters'][a]['verses'][b] = {}
+                chtxt1: List[str] = ch1['text'].split(' ')
+                chtxt2: List[str] = ch2['text'].split(' ')
 
-                    # Do number of words match?
-                    if len(v1) != len(v2):
-                        diffs['chapters'][a]['verses'][b]['word_count_match?'] = False
-                        diffs['chapters'][a]['verses'][b]['word_count'] = [len(v1), len(v2)]
-                        print(f"WARNING: Number of words don't match in chapter {a} verse {b}. Skipping.")
-                        continue # Go to next verse
-                    diffs['chapters'][a]['verses'][b]['word_count_match?'] = True
-                    diffs['chapters'][a]['verses'][b]['word_count'] = [len(v1)]
+                # Compare each word in the chapter
+                txt_diffs = []
+                for b in range(len(chtxt1)):
+                    word1 = chtxt1[b]
+                    word2 = chtxt2[b]
+                    
+                    # If difference found
+                    if word1 != word2:
+                        all_narrarations_difference_count += 1
+                        this_pair_difference_count += 1
+                        verse_index_1 = find_verse_num_of_narration(ch1, b)
+                        verse_index_2 = find_verse_num_of_narration(ch2, b)
 
-                    # Compare words
-                    word_diffs = []
-                    for c in range(len(v1)):
-                        w1 = v1[c]
-                        w2 = v2[c]
-                        if w1 != w2:
-                            word_diffs.append((w1,w2))
-                    diffs['chapters'][a]['verses'][b]['diffs'] = word_diffs
+                        txt_diffs.append({
+                            'word_index': b,
+                            'word1': word1,
+                            'word2': word2,
+                            'word1_narraration_verse':verse_index_1,
+                            'word2_narraration_verse':verse_index_2
+                        })
+                # Put all differences in the chapter
+                diffs['chapters'][a]['diffs'] = txt_diffs
 
+            # Write out this contrast doc to file
             write_out(out_dir, diffs)
+            # Notify differences in this pair
+            print(f"Differences count in this pair/contrast: {this_pair_difference_count}")
+        
+    # Print overall metrics
+    print(f"Overall difference count: {all_narrarations_difference_count}")
 
