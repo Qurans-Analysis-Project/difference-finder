@@ -12,7 +12,8 @@ def write_out(out_dir: Path, obj: DifferenceReport):
     name1 = str(obj.source1).partition('.')[0]
     name2 = str(obj.source2).partition('.')[0]
     out_path = out_dir.joinpath(f'{name1}_vs_{name2}.json')
-    out_path.write_text(dumps(obj), cls=customJSONEncoder)
+    js_str = dumps(obj, cls=customJSONEncoder)
+    out_path.write_text(js_str)
 
 
 def find_verse_num_of_narration(chapter: dict, word_index: str):
@@ -40,7 +41,7 @@ def equal_rasm(word1: str, word2: str) -> Tuple[ bool, RasmDifference|None ]:
     word2_rasm = without_diacritics(word2)
 
     if len(word1_rasm) != len(word2_rasm):
-        print(f"WARNING: equal_rasm length mismatch: word1: {word1} word2: {word2}")
+        #print(f"WARNING: equal_rasm length mismatch: word1: {word1} word2: {word2}")
         return (
             False, 
             RasmDifference(
@@ -137,7 +138,7 @@ def resync(
             index1: int,
             words2: List[str],
             index2: int,
-            tolerance: int = 2
+            tolerance: int = 6
         ) -> Tuple[int, int, ResyncEvent|None]:
     '''
     On rasm difference, find the next common rasm word to resync to.
@@ -190,6 +191,13 @@ def resync(
                         ch_index2= None     # To be filled out by caller
                     )
                 )
+    
+    # could not resync
+    return (
+        min(index1+1, len(words1)-1),
+        min(index2+1, len(words2)-1),
+        None
+    )
 
 
 def handle_chapter(ch1: dict, ch1_index: int, ch2: dict, ch2_index: int, diffs: DifferenceReport):
@@ -242,13 +250,14 @@ def handle_chapter(ch1: dict, ch1_index: int, ch2: dict, ch2_index: int, diffs: 
                 diffs.rasm_differences_detail.append(diff)
                 
                 # Also need to Resync because the Rasm doesn't match
-                b1, b2, _resync_event = resync(chtxt1, b1, chtxt2, b2)
-                if _resync_event is not None:
-                    _resync_event.ch_index1 = a
-                    _resync_event.ch_index2 = a
-                    diffs.resync_events.append(_resync_event)
-                # Do not increment b1 & b2 they already found the next match in resync call
-                continue
+                if b1+1 < len(chtxt1) and b2+1 < len(chtxt2):
+                    b1, b2, _resync_event = resync(chtxt1, b1, chtxt2, b2)
+                    if _resync_event is not None:
+                        _resync_event.ch_index1 = a
+                        _resync_event.ch_index2 = a
+                        diffs.resync_events.append(_resync_event)
+                    # Do not increment b1 & b2 they already found the next match in resync call
+                    continue
             
             # ijam?
             equal, diff = equal_ijam(word1, word2)
@@ -360,6 +369,7 @@ if __name__ == '__main__':
                 for a in range(1, len(chs1)):
                     ch1 = chs1[f'{a}']
                     ch2 = chs2[f'{a}']
+                    print(f"{a}..", end='')
                     handle_chapter(ch1, a, ch2, a, diffs)
                     
 
@@ -409,7 +419,7 @@ if __name__ == '__main__':
         chapter_count_differences= all_chapter_count_differences,
         chapter_count_differences_detail= [],
         chapter_name_differences= all_chapter_name_differences,
-        chapter_name_difference_detail= [],
+        chapter_name_differences_detail= [],
         verse_count_differences= all_verse_count_differences,
         verse_count_differences_detail= [],
         word_count_differences= all_word_count_differences,
