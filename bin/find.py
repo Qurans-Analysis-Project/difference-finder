@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import List, Tuple
-from json import loads, dumps
+from json import loads, dump
 from difference_models import *
 from exceptions import *
 from arabic import RASM_GROUP, TATWEEL, ANNOTATION
@@ -12,8 +12,8 @@ def write_out(out_dir: Path, obj: DifferenceReport):
     name1 = str(obj.source1).partition('.')[0]
     name2 = str(obj.source2).partition('.')[0]
     out_path = out_dir.joinpath(f'{name1}_vs_{name2}.json')
-    js_str = dumps(obj, cls=customJSONEncoder)
-    out_path.write_text(js_str)
+    with out_path.open('w', encoding='utf-8') as jsf:
+        dump(obj, jsf, cls=customJSONEncoder, ensure_ascii=False)
 
 
 def find_verse_num_of_narration(chapter: dict, word_index: str):
