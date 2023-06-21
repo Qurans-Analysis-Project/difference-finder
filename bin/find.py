@@ -13,7 +13,7 @@ def write_out(out_dir: Path, obj: DifferenceReport):
     name2 = str(obj.source2).partition('.')[0]
     out_path = out_dir.joinpath(f'{name1}_vs_{name2}.json')
     with out_path.open('w', encoding='utf-8') as jsf:
-        dump(obj, jsf, cls=customJSONEncoder, ensure_ascii=False)
+        dump(obj, jsf, cls=customJSONEncoder, ensure_ascii=False, indent=4)
 
 
 def find_verse_num_of_narration(chapter: dict, word_index: str):

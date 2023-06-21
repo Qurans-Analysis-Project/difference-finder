@@ -1,1 +1,20 @@
-{"source1": "SUMMARY", "source2": "REPORT", "chapter_count_differences": 0, "chapter_count_differences_detail": [], "chapter_name_differences": 1229, "chapter_name_differences_detail": [], "verse_count_differences": 0, "verse_count_differences_detail": [], "word_count_differences": 88, "word_count_differences_detail": [], "rasm_differences": 60690, "rasm_differences_detail": [], "ijam_differences": 0, "ijam_differences_detail": [], "harakat_differences": 925980, "harakat_differences_detail": [], "resync_count": 2925, "resync_events": []}
+{
+    "source1": "SUMMARY",
+    "source2": "REPORT",
+    "chapter_count_differences": 0,
+    "chapter_count_differences_detail": [],
+    "chapter_name_differences": 1229,
+    "chapter_name_differences_detail": [],
+    "verse_count_differences": 0,
+    "verse_count_differences_detail": [],
+    "word_count_differences": 88,
+    "word_count_differences_detail": [],
+    "rasm_differences": 60690,
+    "rasm_differences_detail": [],
+    "ijam_differences": 0,
+    "ijam_differences_detail": [],
+    "harakat_differences": 925980,
+    "harakat_differences_detail": [],
+    "resync_count": 2925,
+    "resync_events": []
+}
