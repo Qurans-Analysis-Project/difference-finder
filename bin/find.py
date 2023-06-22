@@ -267,12 +267,17 @@ def handle_chapter(ch1: dict, ch1_index: int, ch2: dict, ch2_index: int, diffs: 
                 diff.word_index2 = b2
                 diff.ch_index1 = ch1_index
                 diff.ch_index2 = ch2_index
-            
-            # harakat?
-            equal, diff = equal_harakat(word1, word2)
-            if not equal:
-                # The harakat doesn't match
-                diffs.harakat_differences_detail.append(diff)
+                diffs.ijam_differences_detail.append(diff)
+            else:
+                # harakat?
+                equal, diff = equal_harakat(word1, word2)
+                if not equal:
+                    # The harakat doesn't match
+                    diff.word_index1 = b1
+                    diff.word_index2 = b2
+                    diff.ch_index1 = ch1_index
+                    diff.ch_index2 = ch2_index
+                    diffs.harakat_differences_detail.append(diff)
                 
 
         # go to next word
@@ -297,7 +302,7 @@ if __name__ == '__main__':
     # Gather all available narrations from source
     src_path = Path('source')
     assert src_path.exists() and src_path.is_dir()
-    out_dir = Path('differences')
+    out_dir = Path('differences/json')
     assert out_dir.exists() and out_dir.is_dir()
 
     all_jsons: List[Path] = []
@@ -369,7 +374,6 @@ if __name__ == '__main__':
                 for a in range(1, len(chs1)):
                     ch1 = chs1[f'{a}']
                     ch2 = chs2[f'{a}']
-                    print(f"{a}..", end='')
                     handle_chapter(ch1, a, ch2, a, diffs)
                     
 

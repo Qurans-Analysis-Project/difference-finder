@@ -1,0 +1,46 @@
+{
+    "source1": "UthmanicHafs1 Ver13.json",
+    "source2": "UthmanicHafs_V20.json",
+    "chapter_count_differences": 0,
+    "chapter_count_differences_detail": [],
+    "chapter_name_differences": 0,
+    "chapter_name_differences_detail": [],
+    "verse_count_differences": 0,
+    "verse_count_differences_detail": [],
+    "word_count_differences": 0,
+    "word_count_differences_detail": [],
+    "rasm_differences": 1,
+    "rasm_differences_detail": [
+        {
+            "letter1": null,
+            "letter_index1": null,
+            "word1": "فٱدرتم",
+            "word_index1": 1116,
+            "ch_index1": 2,
+            "letter2": null,
+            "letter_index2": null,
+            "word2": "فٱدرءتم",
+            "word_index2": 1116,
+            "ch_index2": 2
+        }
+    ],
+    "ijam_differences": 0,
+    "ijam_differences_detail": [],
+    "harakat_differences": 1,
+    "harakat_differences_detail": [
+        {
+            "letter1": null,
+            "letter_index1": null,
+            "word1": "مَجۡرٜىٰهَا",
+            "word_index1": 678,
+            "ch_index1": 11,
+            "letter2": null,
+            "letter_index2": null,
+            "word2": "مَجۡر۪ىٰهَا",
+            "word_index2": 678,
+            "ch_index2": 11
+        }
+    ],
+    "resync_count": 0,
+    "resync_events": []
+}
