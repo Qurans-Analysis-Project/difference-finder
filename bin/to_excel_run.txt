@@ -1,0 +1,2 @@
+An example run command from the top directory
+python ./bin/to_excel.py

@@ -228,6 +228,17 @@ def handle_chapter(ch1: dict, ch1_index: int, ch2: dict, ch2_index: int, diffs: 
             )
         )
 
+    # Do chapter verse counts match
+    if len(dict(ch1['verses']).keys()) != len(dict(ch2['verses']).keys()):
+        diffs.verse_count_differences_detail.append(
+            VerseCountDifference(
+                count1= len(dict(ch1['verses']).keys()),
+                ch_index1= ch1_index,
+                count2= len(dict(ch2['verses']).keys()),
+                ch_index2= ch2_index
+            )
+        )
+
     # Compare each word in the chapter
     b1 = 0
     b2 = 0
