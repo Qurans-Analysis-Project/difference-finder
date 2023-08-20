@@ -61,10 +61,12 @@ if __name__ == '__main__':
     # Calculate total number of contrasts for progress bar
     print(f"Found {len(all_diffs_jsons)} JSON files.")
 
+    current_quran_index = 0
     for js in all_diffs_jsons:
+        current_quran_index += 1
+        print(f"Working on Quran {current_quran_index} / {len(all_diffs_jsons)}")
         with js.open('rt', encoding='utf-8') as jsf:
             diffs = load(jsf)
-        
         
         # Intro/Overview
         intro_df = pd.DataFrame(columns=['Source 1',
@@ -90,7 +92,7 @@ if __name__ == '__main__':
             '# Verse Count Differences':[diffs["verse_count_differences"]],
             '# Chapter Count Differences':[diffs["chapter_count_differences"]],
         }
-        intro_df.from_dict(dat)
+        intro_df = intro_df.from_dict(dat)
 
 
         # Resync
@@ -108,7 +110,7 @@ if __name__ == '__main__':
                 'Chapter # 1': record["ch_index1"],
                 'Chapter # 2': record["ch_index2"],
             })
-        resync_df.from_records(rearranged_columns_data)
+        resync_df = resync_df.from_records(rearranged_columns_data)
         
 
         # Rasm
@@ -132,7 +134,7 @@ if __name__ == '__main__':
                 'Chapter # 1': record["ch_index1"],
                 'Chapter # 2': record["ch_index2"]
             })
-        rasm_df.from_records(rearranged_columns_data)
+        rasm_df = rasm_df.from_records(rearranged_columns_data)
         
 
         # Ijam
@@ -156,7 +158,7 @@ if __name__ == '__main__':
                 'Chapter # 1': record["ch_index1"],
                 'Chapter # 2': record["ch_index2"]
             })
-        ijam_df.from_records(rearranged_columns_data)
+        ijam_df = ijam_df.from_records(rearranged_columns_data)
 
 
         # Harakat
@@ -180,7 +182,7 @@ if __name__ == '__main__':
                 'Chapter # 1': record["ch_index1"],
                 'Chapter # 2': record["ch_index2"]
             })
-        harakat_df.from_records(rearranged_columns_data)
+        harakat_df = harakat_df.from_records(rearranged_columns_data)
 
 
         # Chapter Name
@@ -195,7 +197,7 @@ if __name__ == '__main__':
                 'Chapter # 1': record["ch_index1"],
                 'Chapter # 2': record["ch_index2"],
             })
-        chapter_name_df.from_records(rearranged_columns_data)
+        chapter_name_df = chapter_name_df.from_records(rearranged_columns_data)
 
 
         # Word Count Differnces
@@ -210,7 +212,7 @@ if __name__ == '__main__':
                 'Chapter # 1': record["ch_index1"],
                 'Chapter # 2': record["ch_index2"],
             })
-        word_count_df.from_records(rearranged_columns_data)
+        word_count_df = word_count_df.from_records(rearranged_columns_data)
 
 
         # Verse Count Differences
@@ -225,7 +227,7 @@ if __name__ == '__main__':
                 'Chapter Index 1': record["ch_index1"],
                 'Chapter Index 2': record["ch_index2"]
             })
-        verse_count_df.from_records(rearranged_columns_data)
+        verse_count_df = verse_count_df.from_records(rearranged_columns_data)
 
 
         # Chapter Count Differences
@@ -236,7 +238,7 @@ if __name__ == '__main__':
                 'Count 1': record["count1"],
                 'Count 2': record["count2"],
             })
-        chapter_count_df.from_records(rearranged_columns_data)
+        chapter_count_df = chapter_count_df.from_records(rearranged_columns_data)
 
         print("Writing out ...")
         write_out(
