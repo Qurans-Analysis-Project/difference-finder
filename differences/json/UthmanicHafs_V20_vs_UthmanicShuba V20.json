@@ -1,6 +1,8 @@
 {
-    "source1": "UthmanicHafs_V20.json",
-    "source2": "UthmanicShuba V20.json",
+    "source1": "qurancomplex.gov.sa",
+    "filename1": "UthmanicHafs_V20.json",
+    "source2": "qurancomplex.gov.sa",
+    "filename2": "UthmanicShuba V20.json",
     "chapter_count_differences": 0,
     "chapter_count_differences_detail": [],
     "chapter_name_differences": 1,

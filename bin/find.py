@@ -9,8 +9,8 @@ from arabic import RASM_GROUP, TATWEEL, ANNOTATION
 
 
 def write_out(out_dir: Path, obj: DifferenceReport):
-    name1 = str(obj.source1).partition('.')[0]
-    name2 = str(obj.source2).partition('.')[0]
+    name1 = str(obj.filename1).partition('.')[0]
+    name2 = str(obj.filename2).partition('.')[0]
     out_path = out_dir.joinpath(f'{name1}_vs_{name2}.json')
     with out_path.open('w', encoding='utf-8') as jsf:
         dump(obj, jsf, cls=customJSONEncoder, ensure_ascii=False, indent=4)
@@ -76,6 +76,14 @@ def equal_rasm(word1: str, word2: str) -> Tuple[ bool, RasmDifference|None ]:
                 )
             )
     return (True, None)
+
+
+def equal_ligature_rasm(word1: str, word2: str) -> Tuple[ bool, RasmDifference|None ]:
+    """
+    This function checks and converts any possible double or triple unicode points into ligatures if they form them.
+    It then checks if this new word has matching rasm or not similar to equal_rasm
+    """
+
 
 '''
 Assume the Rasm has already been checked and is equal. Only check if the consonants are different
@@ -253,6 +261,7 @@ def handle_chapter(ch1: dict, ch1_index: int, ch2: dict, ch2_index: int, diffs: 
 
             # rasm?
             equal, diff = equal_rasm(word1, word2)
+            #equal_lig, diff_lig = equal_ligature_rasm(word1, word2)
             if not equal:
                 diff.word_index1 = b1
                 diff.word_index2 = b2
@@ -349,8 +358,10 @@ if __name__ == '__main__':
 
             # Differences for this contrast
             diffs = DifferenceReport(
-                source1= q1.name,
-                source2= q2.name,
+                source1= q1.parent.name,
+                filename1= q1.name,
+                source2= q2.parent.name,
+                filename2= q2.name,
                 chapter_count_differences= 0,
                 chapter_count_differences_detail= [],
                 chapter_name_differences= 0,
@@ -430,7 +441,9 @@ if __name__ == '__main__':
     print("Saving Summary Report ...")
     summary = DifferenceReport(
         source1= 'SUMMARY',
+        filename1='',
         source2= 'REPORT',
+        filename2='',
         chapter_count_differences= all_chapter_count_differences,
         chapter_count_differences_detail= [],
         chapter_name_differences= all_chapter_name_differences,

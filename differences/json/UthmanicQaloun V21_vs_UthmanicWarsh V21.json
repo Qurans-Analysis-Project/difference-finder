@@ -1,6 +1,8 @@
 {
-    "source1": "UthmanicQaloun V21.json",
-    "source2": "UthmanicWarsh V21.json",
+    "source1": "qurancomplex.gov.sa",
+    "filename1": "UthmanicQaloun V21.json",
+    "source2": "qurancomplex.gov.sa",
+    "filename2": "UthmanicWarsh V21.json",
     "chapter_count_differences": 0,
     "chapter_count_differences_detail": [],
     "chapter_name_differences": 101,

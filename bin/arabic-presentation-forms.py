@@ -22,6 +22,14 @@ Link: https://www.unicode.org/charts/PDF/UFE70.pdf
 
 '''
 
+def is_two_element_ligature(word: str) -> bool:
+    return ( '\uFBEA' <= word <= '\uFD3D'
+        or '\uFEF5' <= word <= '\uFEFB' )
+
+def is_three_element_ligature(word: str) -> bool:
+    return '\uFD50' <= word <= '\uFDC7'
+
+
 # RASM GROUPS
 ARABIC_LIGATURE_YEH_WITH_HAMZA_ABOVE_1 = ['ﯪ','ﯫ']
 ARABIC_LIGATURE_YEH_WITH_HAMZA_ABOVE_2 = ['ﯬ','ﯭ']
@@ -30,17 +38,23 @@ ARABIC_LIGATURE_YEH_WITH_HAMZA_ABOVE_4 = ['ﯶ','ﯷ','ﯹ','ﯺ']
 ARABIC_LIGATURE_YEH_WITH_HAMZA_ABOVE_5 = ['ﯸ','ﯻ']
 ARABIC_LETTER_FARSI_YEH_1 = ['ﯼ','ﯽ']
 ARABIC_LETTER_FARSI_YEH_2 = ['ﯾ','ﯿ']
+#EX:
 ARABIC_LIGATURE_YEH_WITH_HAMZA_ABOVE_7 = ['\uFC03','\uFC04']
+#EX:
 ARABIC_LIGATURE_BEH_YEH_WITH_HAMZA_ABOVE_1 = ['\uFC00','\uFC01','\uFC05',
                                           '\uFC06','\uFC07','\uFC0B',
                                           '\uFC0C','\uFC0D','\uFC11']
-ARABIC_LIGATURE_BEH_YEH_WITH_HAMZA_ABOVE_2 = ['\uFC02','\uFC08','\uFC0E',
-                                              '\uFC12']
-ARABIC_LIGATURE_BEH = ['\uFC09','\uFC0A','\uFC0F','\uFC10','\uFC13',
+ARABIC_LIGATURE_BEH_YEH_WITH_HAMZA_ABOVE_2 = ['\uFC02','ﰈ','ﰎ',
+                                              'ﰒ']
+ARABIC_LIGATURE_BEH = ['ﰉ','\uFC0A','\uFC0F','\uFC10','\uFC13',
                       '\uFC14']
+#EX:
 ARABIC_LIGATURE_JEEM_1 = ['\uFC15','\uFC17','\uFC19','\uFC1A']
+#EX:
 ARABIC_LIGATURE_JEEM_2 = ['\uFC16','\uFC18','\uFC1B']
+#EX:
 ARABIC_LIGATURE_SEEN_1 = ['\uFC1C','\uFC1D','\uFC1E']
+#EX:
 ARABIC_LIGATURE_SEEN_2 = ['\uFC1F']
 ARABIC_LIGATURE_SAD_1 = ['\uFC20','\uFC22','\uFC23','\uFC24']
 ARABIC_LIGATURE_SAD_2 = ['\uFC21','\uFC25']

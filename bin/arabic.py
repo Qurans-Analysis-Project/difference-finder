@@ -1,6 +1,6 @@
 '''
 arabic.py
-This file is used to independently manage the arabic letters and groups as it had grown to big in both lines
+This file is used to independently manage the arabic letters and groups as it had grown too big in both lines
 and concern to not be in its own file.
 Multiple Unicode code pages will be included here:
 
@@ -21,8 +21,8 @@ Link: https://www.unicode.org/charts/PDF/U0870.pdf
 Arabic Extended-C Range: 10EC0-10EFF
 Link: https://www.unicode.org/charts/PDF/U10EC0.pdf
 
-Arabic Presenation Forms A & B are not included as
-no source text uses a unicode character in their ranges.
+Arabic Presenation Forms A & B are not included here.
+They are included in arabic-presentation-froms.py
 '''
 
 # RASM GROUPS

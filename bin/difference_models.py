@@ -87,8 +87,10 @@ class ResyncEvent():
 
 @dataclass
 class DifferenceReport():
-    source1: str
+    source1: str    # Wehre the file was provided from, usually a website's domain name.
+    filename1: str  # The name of the file. Contains the narration.
     source2: str
+    filename2: str
     chapter_count_differences: int
     chapter_count_differences_detail: List[ChapterCountDifference]
     chapter_name_differences: int
