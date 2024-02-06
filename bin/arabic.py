@@ -23,6 +23,7 @@ Link: https://www.unicode.org/charts/PDF/U10EC0.pdf
 
 Arabic Presenation Forms A & B are not included here.
 They are included in arabic-presentation-froms.py
+and arabic-ligatures.py
 '''
 
 # RASM GROUPS
@@ -34,6 +35,7 @@ ALEF = ['ا','آ','أ','إ','ٱ','ٲ','ٳ','\u0675','ݳ','ݴ','\u0870','\u0871',
         '\u0881','\u0882']
 BEH = ['ٮ','ب','ت','ث','ٹ','ٺ','ٻ','ټ','ٽ','پ','ٿ','ڀ','ݐ','ݑ','ݒ','ݓ','ݔ','ݕ',
        'ݖ','ࢠ','ࢡ','ࢶ','ࢷ','ࢸ','\u08BE','\u08BF','\u08C0']
+# It is understood HAH and JEEM are different but their rasm is the same
 HAH = ['ج','ح','خ','ځ','ڂ','ڃ','ڄ','څ','چ','ڇ','ڿ','ݗ','ݘ','ݮ','ݯ','ݲ','ݼ','ࢢ',
        '\u08C1','\u08C5','\u08C6','\u088A']
 DAL = ['د','ذ','ڈ','ډ','ڊ','ڋ','ڌ','ڍ','ڎ','ڏ','ڐ','ۮ','ݙ','ݚ','ࢮ']

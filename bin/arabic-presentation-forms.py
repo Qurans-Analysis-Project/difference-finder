@@ -1,16 +1,7 @@
 '''
-arabic-presentation-froms.py
-In a previous version it was said stated we do not need to include the Arabic Presentation Forms unicode charts because
-"no source text uses a unicode character in their ranges.". The team has decided to include these documents for two reasons:
-
-    1) While this may be true thusfar for the sources from qurancomplex.gov.sa
-    This may not always be true for all texts in the future as the team hopes to gather more texts.
-    
-    2) More importantly we must understand that unicode represents some characters using multiple characters. These are
-    called ligatures. What is important to note for this project is ligatures can have the same Rasm when displayed with different
-    Ijam and Harakat. So just because two unicode letters don't match another two unicode letters from another text doesn't mean
-    when displayed they have a rasm difference. So without including these ligatures to perform checks then we will have many
-    false positives in the rasm differences that might should have been Ijam differences or possibly even no difference at all.
+arabic-presentation-forms.py
+This file includes the groupings of each character based on it's:
+isolated, initial, medial, and final forms
 
 Arabic Unicode charts Included:
 
@@ -22,44 +13,132 @@ Link: https://www.unicode.org/charts/PDF/UFE70.pdf
 
 '''
 
-def is_two_element_ligature(word: str) -> bool:
-    return ( '\uFBEA' <= word <= '\uFD3D'
-        or '\uFEF5' <= word <= '\uFEFB' )
+"""
+Not when working with this data it is recommended to use a two-step process of taking the 
+input character and checking which form it is in within its overall string:
+isolated, initial, medial, and final forms
+the unicode character with its proper form is then selected.
+Theis character is then used to find the same rasm groups
+"""
 
-def is_three_element_ligature(word: str) -> bool:
-    return '\uFD50' <= word <= '\uFDC7'
+from arabic import *
 
+
+
+JOINING_GROUPS = {
+    #HAMZA 0621
+    'ء': {"isolated":'\uFE80', "initial":None, "medial":None, "final":None},
+    # ALEF WITH MADDA ABOVE 0622
+    'آ': {"isolated":'\uFE81', "initial":None, "medial":None, "final":'\uFE82'},
+    # ALEF WITH HAMZA ABOVE 0623
+    'أ': {"isolated":'\uFE83', "initial":None, "medial":None, "final":'\uFE84'},
+    # WAW WITH HAMZA ABOVE 0624
+    'ؤ': {"isolated":'\uFE85', "initial":None, "medial":None, "final":'\uFE86'},
+    # ALEF WITH HAMZA BELOW 0625
+    'إ': {"isolated":'\uFE87', "initial":None, "medial":None, "final":'\uFE88'},
+    # YEH WITH HAMZA ABOVE 0626
+    'ئ': {"isolated":'\uFE89', "initial":'\uFE8B', "medial":'\uFE8C', "final":'\uFE8A'},
+    # ALEF 0627
+    'ا': {"isolated":'\uFE8D', "initial":None, "medial":None, "final":'\uFE8E'},
+    # BEH 0628
+    'ب': {"isolated":'\uFE8F', "initial":'\uFE91', "medial":'\uFE92', "final":'\uFE90'},
+    # TEH MARBUTA 0629
+    'ة': {"isolated":'\uFE93', "initial":None, "medial":None, "final":'\uFE94'},
+    # TEH 062A
+    'ت': {"isolated":'\uFE95', "initial":'\uFE97', "medial":'\uFE98', "final":'\uFE96'},
+    # THEH 062B
+    'ث': {"isolated":'\uFE99', "initial":'\uFE9B', "medial":'\uFE9C', "final":'\uFE9A'},
+    # JEEM 062C
+    'ج': {"isolated":'\uFE9D', "initial":'\uFE9F', "medial":'\uFEA0', "final":'\uFE9E'},
+    # HAH 062D
+    'ح': {"isolated":'\uFEA1', "initial":'\uFEA3', "medial":'\uFEA4', "final":'\uFEA2'},
+    # KHAH 062E
+    'خ': {"isolated":'\uFEA5', "initial":'\uFEA7', "medial":'\uFEA8', "final":'\uFEA6'},
+    # DAL 062F
+    'د': {"isolated":'\uFEA9', "initial":None, "medial":None, "final":'\uFEAA'},
+    # THAL 0630
+    'ذ': {"isolated":'\uFEAB', "initial":None, "medial":None, "final":'\uFEAC'},
+    # REH 0631
+    'ر': {"isolated":'\uFEAD', "initial":None, "medial":None, "final":'\uFEAE'},
+    # ZAIN 0632
+    'ز': {"isolated":'\uFEAF', "initial":None, "medial":None, "final":'\uFEB0'},
+    # SEEN 0633
+    'س': {"isolated":'\uFEB1', "initial":'\uFEB3', "medial":'\uFEB4', "final":'\uFEB2'},
+    # SHEEN 0634
+    'ش': {"isolated":'\uFEB5', "initial":'\uFEB7', "medial":'\uFEB8', "final":'\uFEB6'},
+    # SAD 0635
+    'ص': {"isolated":'\uFEB9', "initial":'\uFEBB', "medial":'\uFEBC', "final":'\uFEBA'},
+    # DAD 0636
+    'ض': {"isolated":'\uFEBD', "initial":'\uFEBF', "medial":'\uFEC0', "final":'\uFEBE'},
+    # TAH 0637
+    'ط': {"isolated":'\uFEC1', "initial":'\uFEC3', "medial":'\uFEC4', "final":'\uFEC2'},
+    # ZAH 0638
+    'ظ': {"isolated":'\uFEC5', "initial":'\uFEC7', "medial":'\uFEC8', "final":'\uFEC6'},
+    # AIN 0639
+    'ع': {"isolated":'\uFEC9', "initial":'\uFECB', "medial":'\uFECC', "final":'\uFECA'},
+    # GHAIN 063A
+    'غ': {"isolated":'\uFECD', "initial":'\uFECF', "medial":'\uFED0', "final":'\uFECE'},
+    # FEH 0641
+    'ف': {"isolated":'\uFED1', "initial":'\uFED3', "medial":'\uFED4', "final":'\uFED2'},
+    # QAF 0642
+    'ق': {"isolated":'\uFED5', "initial":'\uFED7', "medial":'\uFED8', "final":'\uFED6'},
+    # KAF 0643
+    'ك': {"isolated":'\uFED9', "initial":'\uFEDB', "medial":'\uFEDC', "final":'\uFEDA'},
+    # LAM 0644
+    'ل': {"isolated":'\uFEDD', "initial":'\uFEDF', "medial":'\uFEE0', "final":'\uFEDE'},
+    # MEEM 0645
+    'م': {"isolated":'\uFEE1', "initial":'\uFEE3', "medial":'\uFEE4', "final":'\uFEE2'},
+    # NOON 0646
+    'ن': {"isolated":'\uFEE5', "initial":'\uFEE7', "medial":'\uFEE8', "final":'\uFEE6'},
+    # HEH 0647
+    'ه': {"isolated":'\uFEE9', "initial":'\uFEEB', "medial":'\uFEEC', "final":'\uFEEA'},
+    # WAW 0648
+    'و': {"isolated":'\uFEED', "initial":None, "medial":None, "final":'\uFEEE'},
+    # ALEF MAKSURA 0649
+    'ى': {"isolated":'\uFEEF', "initial":None, "medial":None, "final":'\uFEF0'},
+    # YEH 064A
+    'ي': {"isolated":'\uFEF1', "initial":'\uFEF3', "medial":'\uFEF4', "final":'\uFEF2'},
+}
 
 # RASM GROUPS
-ARABIC_LIGATURE_YEH_WITH_HAMZA_ABOVE_1 = ['ﯪ','ﯫ']
-ARABIC_LIGATURE_YEH_WITH_HAMZA_ABOVE_2 = ['ﯬ','ﯭ']
-ARABIC_LIGATURE_YEH_WITH_HAMZA_ABOVE_3 = ['ﯮ','ﯯ','ﯰ','ﯱ','ﯲ','ﯳ','ﯴ','ﯵ']
-ARABIC_LIGATURE_YEH_WITH_HAMZA_ABOVE_4 = ['ﯶ','ﯷ','ﯹ','ﯺ']
-ARABIC_LIGATURE_YEH_WITH_HAMZA_ABOVE_5 = ['ﯸ','ﯻ']
-ARABIC_LETTER_FARSI_YEH_1 = ['ﯼ','ﯽ']
-ARABIC_LETTER_FARSI_YEH_2 = ['ﯾ','ﯿ']
-#EX:
-ARABIC_LIGATURE_YEH_WITH_HAMZA_ABOVE_7 = ['\uFC03','\uFC04']
-#EX:
-ARABIC_LIGATURE_BEH_YEH_WITH_HAMZA_ABOVE_1 = ['\uFC00','\uFC01','\uFC05',
-                                          '\uFC06','\uFC07','\uFC0B',
-                                          '\uFC0C','\uFC0D','\uFC11']
-ARABIC_LIGATURE_BEH_YEH_WITH_HAMZA_ABOVE_2 = ['\uFC02','ﰈ','ﰎ',
-                                              'ﰒ']
-ARABIC_LIGATURE_BEH = ['ﰉ','\uFC0A','\uFC0F','\uFC10','\uFC13',
-                      '\uFC14']
-#EX:
-ARABIC_LIGATURE_JEEM_1 = ['\uFC15','\uFC17','\uFC19','\uFC1A']
-#EX:
-ARABIC_LIGATURE_JEEM_2 = ['\uFC16','\uFC18','\uFC1B']
-#EX:
-ARABIC_LIGATURE_SEEN_1 = ['\uFC1C','\uFC1D','\uFC1E']
-#EX:
-ARABIC_LIGATURE_SEEN_2 = ['\uFC1F']
-ARABIC_LIGATURE_SAD_1 = ['\uFC20','\uFC22','\uFC23','\uFC24']
-ARABIC_LIGATURE_SAD_2 = ['\uFC21','\uFC25']
-ARABIC_LIGATURE_TAH_1 = ['\uFC26']
-ARABIC_LIGATURE_TAH_2 = ['\uFC27', '\uFC28']
-ARABIC_LIGATURE_AIN_1 = ['\uFC29','\uFC2B']
-ARABIC_LIGATURE_AIN_2 = ['\uFC2A','\uFC2C']
-ARABIC_LIGATURE_FEH_1 = ['\uFC2D','\uFC2E','\uFC2F','\uFC33']
+HAMZA = ['\uFE80']
+AIN_INITIAL = ['\uFECF','\uFECB']
+BEH = ['\uFE8F','\uFE90','\uFE95','\uFE96','\uFE99','\uFE9A']
+NOON = ['\uFEE6','\uFEE5']
+AIN_ISOLATED = ['\uFECD','\uFECE','\uFEC9','\uFECA']
+HAH = ['\uFE9D','\uFE9E','\uFEA1','\uFEA2','\uFEA5','\uFEA6']
+VERTICAL_LINE = ['\uFE81','\uFE82','\uFE83','\uFE84','\uFE87','\uFE88','\uFE8D','\uFE8E','\uFEDF','\uFEE0']
+DAL_FINAL = ['\uFEAA','\uFEAC']
+TWEEZERS = ['\uFE9F','\uFEA0','\uFEA3','\uFEA4','\uFEA7','\uFEA8']
+TAH = ['\uFEC1','\uFEC2','\uFEC3','\uFEC4','\uFEC5','\uFEC6','\uFEC7','\uFEC8']
+WAW = ['\uFE85','\uFE86','\uFEED','\uFEEE']
+QAF_ISOLATED = ['\uFED5','\uFED6']
+QAF_INITIAL = ['\uFED3','\uFED7']
+FEH_ISOLATED = ['\uFED1','\uFED2']
+SEEN_ISOLATED = ['\uFEB1','\uFEB2','\uFEB5','\uFEB6']
+SAD_ISOLATED = ['\uFEB9','\uFEBA','\uFEBD','\uFEBE']
+SAD_INITIAL = ['\uFEBB','\uFEBC','\uFEBF','\uFEC0']
+YEH = ['\uFE89','\uFE8A','\uFEEF','\uFEF0','\uFEF1','\uFEF2']
+LAM = ['\uFEDD','\uFEDE']
+KAF = ['\uFEDB','\uFEDC']
+MEEM_ISOLATED = ['\uFEE1','\uFEE2']
+WAVE_RIGHT = ['\uFE8B','\uFE91','\uFE97','\uFE9B','\uFEF3','\uFEE7']
+REH = ['\uFEAD','\uFEAE','\uFEAF','\uFEB0']
+DAL_ISOLATED = ['\uFEA9','\uFEAB']
+HEH_MEDIAL = ['\uFEEC']
+KAF_ISOLATED = ['\uFED9']
+KAF_FINAL = ['\uFEDA']
+WAVE_MIDDLE = ['\uFE8C','\uFE92','\uFE98','\uFE9C','\uFEF4','\uFEE8']
+SEEN_MEDIAL = ['\uFEB3','\uFEB4','\uFEB7','\uFEB8']
+HEH_ISOLATED = ['\uFEE9','\uFE93']
+FEH_MEDIAL = ['\uFED4','\uFED8']
+AIN_MEDIAL = ['\uFECC','\uFED0']
+MEEM_INITIAL = ['\uFEE3','\uFEE4']
+HEH_FINAL = ['\uFEEA','\uFE94']
+HEH_INITIAL = ['\uFEEB']
+
+
+# For each character, lookup its Rasm group
+CONTEXTUAL_FORMS_RASM_GROUPS = {
+
+}
