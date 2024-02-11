@@ -29,6 +29,7 @@ def is_two_element_ligature(word: str) -> bool:
 def is_three_element_ligature(word: str) -> bool:
     return '\uFD50' <= word <= '\uFDC7'
 
+# NOTE: INCOMPLETE
 
 # RASM GROUPS
 ARABIC_LIGATURE_YEH_WITH_HAMZA_ABOVE_1 = ['ﯪ','ﯫ']
